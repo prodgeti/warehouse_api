@@ -7,7 +7,7 @@ from crud import (
 )
 from schemas import (Product, ProductCreate,
                      Order, OrderCreate,
-                     OrderItemCreate, OrderStatus)
+                     OrderItemCreate, OrderStatusUpdate)
 
 app = FastAPI()
 
@@ -79,10 +79,10 @@ def get_order_endpoint(order_id: int, db: Session = Depends(get_db)):
 @app.patch("/orders/{order_id}/status", response_model=Order)
 def update_order_status_endpoint(
     order_id: int,
-    status: OrderStatus,
+    status_update: OrderStatusUpdate,
     db: Session = Depends(get_db)
 ):
-    return update_order_status(db, order_id, status)
+    return update_order_status(db, order_id, status_update.status)
 
 
 @app.post("/orders/{order_id}/items", response_model=Order)

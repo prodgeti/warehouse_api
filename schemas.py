@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date
 from typing import List, Optional
 import enum
@@ -24,8 +24,7 @@ class ProductCreate(ProductBase):
 class Product(ProductBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OrderItemBase(BaseModel):
@@ -40,8 +39,7 @@ class OrderItemCreate(OrderItemBase):
 class OrderItem(OrderItemBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OrderBase(BaseModel):
@@ -50,12 +48,16 @@ class OrderBase(BaseModel):
 
 
 class OrderCreate(OrderBase):
-    pass
+    status: OrderStatus = OrderStatus.in_progress
+    items: List[OrderItemCreate] = []
 
 
 class Order(OrderBase):
     id: int
     items: List[OrderItem] = []
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
+
+
+class OrderStatusUpdate(BaseModel):
+    status: OrderStatus
